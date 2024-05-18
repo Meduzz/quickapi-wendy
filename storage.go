@@ -5,24 +5,33 @@ import (
 
 	"github.com/Meduzz/quickapi"
 	"github.com/Meduzz/quickapi-wendy/api"
+	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 type (
 	storage struct {
-		entity quickapi.Entity
-		db     *gorm.DB
+		entity   quickapi.Entity
+		db       *gorm.DB
+		validate *validator.Validate
 	}
 )
 
 func newStorage(db *gorm.DB, entity quickapi.Entity) *storage {
-	return &storage{entity, db}
+	v := validator.New(validator.WithRequiredStructEnabled())
+	return &storage{entity, db, v}
 }
 
 func (s *storage) Create(c *api.Create) (any, error) {
 	e := s.entity.Create()
 	err := json.Unmarshal(c.Entity, e)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.validate.Struct(e)
 
 	if err != nil {
 		return nil, err
@@ -59,6 +68,12 @@ func (s *storage) Read(r *api.Read) (any, error) {
 func (s *storage) Update(u *api.Update) (any, error) {
 	e := s.entity.Create()
 	err := json.Unmarshal(u.Entity, e)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.validate.Struct(e)
 
 	if err != nil {
 		return nil, err

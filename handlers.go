@@ -21,6 +21,7 @@ type (
 
 const (
 	codeBadJson = "BAD_JSON"
+	codeGeneric = "GENERIC" // ;-)
 )
 
 func newHandler(storage *storage) *handler {
@@ -43,7 +44,7 @@ func (h *handler) Create(r *wendy.Request) *wendy.Response {
 
 	if err != nil {
 		log.Error("creating entity threw error", "error", err)
-		return wendy.Error(createError("TODO", err))
+		return wendy.Error(createError(codeGeneric, err))
 	}
 
 	return wendy.Ok(wendy.Json(res))
@@ -64,7 +65,7 @@ func (h *handler) Read(r *wendy.Request) *wendy.Response {
 
 	if err != nil {
 		log.Error("creating entity threw error", "error", err)
-		return wendy.Error(createError("TODO", err))
+		return wendy.Error(createError(codeGeneric, err))
 	}
 
 	return wendy.Ok(wendy.Json(res))
@@ -85,7 +86,7 @@ func (h *handler) Update(r *wendy.Request) *wendy.Response {
 
 	if err != nil {
 		log.Error("updating entity threw error", "error", err)
-		return wendy.Error(createError("TODO", err))
+		return wendy.Error(createError(codeGeneric, err))
 	}
 
 	return wendy.Ok(wendy.Json(res))
@@ -106,7 +107,7 @@ func (h *handler) Delete(r *wendy.Request) *wendy.Response {
 
 	if err != nil {
 		log.Error("deleting entity threw error", "error", err)
-		return wendy.Error(createError("TODO", err))
+		return wendy.Error(createError(codeGeneric, err))
 	}
 
 	return wendy.Ok(nil)
@@ -127,7 +128,7 @@ func (h *handler) Search(r *wendy.Request) *wendy.Response {
 
 	if err != nil {
 		log.Error("searching for entities threw error", "error", err)
-		return wendy.Error(createError("TODO", err))
+		return wendy.Error(createError(codeGeneric, err))
 	}
 
 	return wendy.Ok(wendy.Json(res))
@@ -148,7 +149,7 @@ func (h *handler) Patch(r *wendy.Request) *wendy.Response {
 
 	if err != nil {
 		log.Error("patching entity threw error", "error", err)
-		return wendy.Error(createError("TODO", err))
+		return wendy.Error(createError(codeGeneric, err))
 	}
 
 	return wendy.Ok(wendy.Json(res))
