@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// Run - exposes the provided entities over nats. Queue is used to queuesubscribe if provided. Prefix to prefix topic bound to if provided.
 func Run(db *gorm.DB, queue, prefix string, entities ...quickapi.Entity) error {
 	nats, err := nuts.Connect()
 
@@ -43,6 +44,7 @@ func Run(db *gorm.DB, queue, prefix string, entities ...quickapi.Entity) error {
 	})
 }
 
+// For - turn provided entity into a wendy.Module.
 func For(db *gorm.DB, entity quickapi.Entity) *wendy.Module {
 	m := wendy.NewModule(entity.Name())
 	s := NewStorage(db, entity)
