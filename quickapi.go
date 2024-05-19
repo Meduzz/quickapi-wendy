@@ -45,8 +45,8 @@ func Run(db *gorm.DB, queue, prefix string, entities ...quickapi.Entity) error {
 
 func For(db *gorm.DB, entity quickapi.Entity) *wendy.Module {
 	m := wendy.NewModule(entity.Name())
-	s := newStorage(db, entity)
-	h := newHandler(s)
+	s := NewStorage(db, entity)
+	h := NewHandler(s)
 
 	m.WithHandler("create", h.Create)
 	m.WithHandler("read", h.Read)

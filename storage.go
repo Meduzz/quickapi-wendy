@@ -18,7 +18,7 @@ type (
 	}
 )
 
-func newStorage(db *gorm.DB, entity quickapi.Entity) *storage {
+func NewStorage(db *gorm.DB, entity quickapi.Entity) *storage {
 	v := validator.New(validator.WithRequiredStructEnabled())
 	return &storage{entity, db, v}
 }
@@ -28,19 +28,19 @@ func (s *storage) Create(c *api.Create) (any, error) {
 	err := json.Unmarshal(c.Entity, e)
 
 	if err != nil {
-		return nil, err
+		return nil, createError(codeBadJson, err)
 	}
 
 	err = s.validate.Struct(e)
 
 	if err != nil {
-		return nil, err
+		return nil, createError(codeBadInput, err)
 	}
 
 	err = s.db.Create(e).Error
 
 	if err != nil {
-		return nil, err
+		return nil, createError(codeGeneric, err)
 	}
 
 	return e, nil
@@ -59,7 +59,7 @@ func (s *storage) Read(r *api.Read) (any, error) {
 	err := query.First(e, r.ID).Error
 
 	if err != nil {
-		return nil, err
+		return nil, createError(codeGeneric, err)
 	}
 
 	return e, nil
@@ -70,13 +70,13 @@ func (s *storage) Update(u *api.Update) (any, error) {
 	err := json.Unmarshal(u.Entity, e)
 
 	if err != nil {
-		return nil, err
+		return nil, createError(codeBadJson, err)
 	}
 
 	err = s.validate.Struct(e)
 
 	if err != nil {
-		return nil, err
+		return nil, createError(codeBadInput, err)
 	}
 
 	query := s.db.Session(&gorm.Session{FullSaveAssociations: true})
@@ -89,7 +89,7 @@ func (s *storage) Update(u *api.Update) (any, error) {
 	err = query.Save(e).Error
 
 	if err != nil {
-		return nil, err
+		return nil, createError(codeGeneric, err)
 	}
 
 	return e, nil
@@ -107,7 +107,7 @@ func (s *storage) Delete(d *api.Delete) error {
 	err := query.Delete(e, d.ID).Error
 
 	if err != nil {
-		return err
+		return createError(codeGeneric, err)
 	}
 
 	return nil
@@ -133,7 +133,7 @@ func (s *storage) Search(c *api.Search) (any, error) {
 	err := query.Find(&data).Error
 
 	if err != nil {
-		return nil, err
+		return nil, createError(codeGeneric, err)
 	}
 
 	return data, nil
@@ -147,7 +147,7 @@ func (s *storage) Patch(p *api.Patch) (any, error) {
 		Updates(p.Data).Error
 
 	if err != nil {
-		return nil, err
+		return nil, createError(codeGeneric, err)
 	}
 
 	query := s.db
@@ -160,7 +160,7 @@ func (s *storage) Patch(p *api.Patch) (any, error) {
 	err = query.Find(e, p.ID).Error
 
 	if err != nil {
-		return nil, err
+		return nil, createError(codeGeneric, err)
 	}
 
 	return e, nil
