@@ -81,6 +81,8 @@ func TestStorage(t *testing.T) {
 			if expected.Code != "VALIDATION" {
 				t.Errorf("error code was not VALIDATION but %s", expected.Code)
 			}
+
+			t.Logf("Error message: %s", expected.Message)
 		})
 
 		t.Run("invalid json", func(t *testing.T) {
@@ -173,6 +175,8 @@ func TestStorage(t *testing.T) {
 			if expected.Code != "VALIDATION" {
 				t.Errorf("error code was not VALIDATION but %s", expected.Code)
 			}
+
+			t.Logf("Error message: %s", expected.Message)
 		})
 
 		t.Run("invalid json", func(t *testing.T) {
