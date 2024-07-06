@@ -4,6 +4,7 @@ import (
 	"github.com/Meduzz/helper/block"
 	"github.com/Meduzz/helper/nuts"
 	"github.com/Meduzz/quickapi"
+	"github.com/Meduzz/quickapi-rpc/storage"
 	"github.com/Meduzz/wendy"
 	wendyrpc "github.com/Meduzz/wendy-rpc"
 	"gorm.io/gorm"
@@ -47,7 +48,7 @@ func Run(db *gorm.DB, queue, prefix string, entities ...quickapi.Entity) error {
 // For - turn provided entity into a wendy.Module.
 func For(db *gorm.DB, entity quickapi.Entity) *wendy.Module {
 	m := wendy.NewModule(entity.Name())
-	s := NewStorage(db, entity)
+	s := storage.NewStorage(db, entity)
 	h := NewHandler(s)
 
 	m.WithHandler("create", h.Create)

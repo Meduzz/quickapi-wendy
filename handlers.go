@@ -4,18 +4,19 @@ import (
 	"errors"
 	"log/slog"
 
-	"github.com/Meduzz/quickapi-wendy/api"
+	"github.com/Meduzz/quickapi-rpc/api"
+	"github.com/Meduzz/quickapi-rpc/storage"
 	"github.com/Meduzz/wendy"
 )
 
 type (
 	handler struct {
 		logger  *slog.Logger
-		storage *storage
+		storage *storage.QuickStorage
 	}
 )
 
-func NewHandler(storage *storage) *handler {
+func NewHandler(storage *storage.QuickStorage) *handler {
 	logger := slog.With("logger", "handler")
 	return &handler{logger, storage}
 }
